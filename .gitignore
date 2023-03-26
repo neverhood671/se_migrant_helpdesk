@@ -1,3 +1,14 @@
 .idea/
+
 /bot/dist/
 /bot/node_modules/
+
+*.iml
+*.ipr
+**/.gradlew/
+**/.gradle/
+**/gradle-wrapper.jar
+**/build/
+**/local_config.properties
+**/tmp.json
+**/tmp.txt
