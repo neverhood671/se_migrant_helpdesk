@@ -10,5 +10,6 @@
 **/gradle-wrapper.jar
 **/build/
 **/local_config.properties
+**/all_posts_*
 **/tmp.json
 **/tmp.txt
