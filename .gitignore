@@ -1,7 +1,11 @@
 .idea/
+venv
 
 /bot/dist/
 /bot/node_modules/
+
+/se_migrant_help_bot/*/**
+/se_migrant_help_bot/*.zip
 
 *.iml
 *.ipr
