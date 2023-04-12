@@ -1,7 +1,10 @@
 import json
-import traceback
+import logging
 
 import telegram_utils as t_utils
+from dynamo_db_provider import DynamoDb
+
+logger = logging.getLogger(__name__)
 
 
 def lambda_handler(event, context):
@@ -12,10 +15,8 @@ def lambda_handler(event, context):
             process_callback(event)
         else:
             print(f'WARN Undefined request type. event: {json.dumps(event)}')
-    except Exception:
-        print('Something goes wrong')
-        print(traceback.format_exc())
-        print(f'event: {json.dumps(event)}')
+    except Exception as error:
+        logger.error('Something goes wrong. Event: %s, Error: %s', {json.dumps(event)}, error)
         return {
             'statusCode': 500,
             'body': json.dumps('Something goes wrong')
@@ -27,6 +28,7 @@ def lambda_handler(event, context):
 def process_message(event):
     message = event['message']
     text = message['text']
+    message_id = message['message_id']
     chat_id = message['chat']['id']
     first_name = message['chat']['first_name']
 
@@ -47,23 +49,31 @@ def process_message(event):
     if response.status_code >= 300:
         print(f'Response status code: {response.status_code}')
         print(f'Response content: {response.content}')
+    else:
+        response_message_id = json.loads(response.content)['result']['message_id']
+        DynamoDb().save_question(
+            chat_id=chat_id,
+            question_message_id=message_id,
+            question=text,
+            response_message_id=response_message_id,
+            answer=response_text
+        )
 
 
 def process_callback(event):
     callback_query = event['callback_query']
-    data = callback_query['data']
+    callback_data = callback_query['data']
     message = callback_query['message']
     message_id = message['message_id']
     text = message['text']
     chat_id = message['chat']['id']
-    first_name = message['chat']['first_name']
 
-    if data == 'good_answer':
+    if callback_data == 'good_answer':
         vote = '👍'
-    elif data == 'bad_answer':
+    elif callback_data == 'bad_answer':
         vote = '👎'
     else:
-        print(f'ERROR Unknown data: {data}')
+        print(f'ERROR Unknown data: {callback_data}')
         return
 
     response_text = f'{text}\n\nYou voted as {vote}'
@@ -79,3 +89,9 @@ def process_callback(event):
     if response.status_code >= 300:
         print(f'Response status code: {response.status_code}')
         print(f'Response content: {response.content}')
+    else:
+        DynamoDb().save_vote(
+            chat_id=chat_id,
+            response_message_id=message_id,
+            vote=callback_data
+        )

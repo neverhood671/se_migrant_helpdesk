@@ -40,6 +40,7 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 6. Click "Create Function"
 7. For new lambda open tab "Configuration" -> "Environment variables"
 8. Add variable `SECRET_REGION_NAME` with your secrets region
+8. Add variable `DYNAMODB_REGION_NAME` with your DynamoDB region
 
 ### Add code to lambda
 
@@ -50,7 +51,7 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 5. Open tab "Code" in AWS
 6. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
 
-### Add permissions
+### Add permissions for secrets
 
 1. In your lambda open tab "Configuration" -> "Permissions"
 2. Open execution role
@@ -59,6 +60,32 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 5. Select Resources -> Specific -> Any in this account
 6. Click "Add additional permission"
 7. Select service "KMS" and action "Write->Decrypt"
+8. Select Resources -> Specific -> Any in this account
+9. Click "Review policy"
+10. Enter policy name
+11. Click "Create policy"
+
+### Add permissions for DynamoDB
+
+1. In your lambda open tab "Configuration" -> "Permissions"
+2. Open execution role
+3. Select "Add permissions -> Create inline policy"
+4. Select service "Secrets Manager" and action "GetSecretValue"
+5. Select Resources -> Specific -> Any in this account
+6. Click "Add additional permission"
+7. Select service "DynamoDB" and actions:
+```
+Read
+- GetItem
+- Query
+Write
+- CreateTable
+- DeleteItem
+- PutItem
+- UpdateItem
+List
+- ListTables
+```
 8. Select Resources -> Specific -> Any in this account
 9. Click "Review policy"
 10. Enter policy name

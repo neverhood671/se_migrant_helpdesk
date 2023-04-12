@@ -1,10 +1,12 @@
 import json
+import logging
 import os
 
 import boto3
 from botocore.exceptions import ClientError
 
 SECRET_REGION_NAME = os.getenv('SECRET_REGION_NAME', 'eu-north-1')
+logger = logging.getLogger(__name__)
 
 telegram_token = None
 
@@ -32,10 +34,13 @@ def request_telegram_token():
         get_secret_value_response = client.get_secret_value(
             SecretId=secret_name
         )
-    except ClientError as e:
+    except ClientError as err:
         # For a list of exceptions thrown, see
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-        raise e
+        logger.error(
+            "Couldn't get secret. Here's why: %s: %s",
+            err.response['Error']['Code'], err.response['Error']['Message'])
+        raise err
 
     # Decrypts secret using the associated KMS key.
     secret = json.loads(get_secret_value_response['SecretString'])['se-migrant-help-bot-token']
