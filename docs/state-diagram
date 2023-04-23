@@ -1,0 +1,35 @@
+@startuml
+
+
+
+home: Bot tries to recognize msg topic
+help: Bot provides info about itself
+feedback: Bot asks for feedback
+state c <<choice>>
+
+state topic_recognized {
+  pn: get a personal number
+  bank: open a bank account
+  apartment: get an apartment
+  swedish: start SFI
+  culture: join local comunities
+}
+
+
+[*] --> home
+home  -> help
+help  -> home
+home --> c
+c  --> pn
+c  --> bank
+c  --> apartment
+c  --> swedish
+c  --> culture
+
+pn -down-> feedback
+bank -down-> feedback
+apartment -down-> feedback
+swedish -down-> feedback
+culture -down-> feedback
+feedback  -down-> [*] 
+@enduml
