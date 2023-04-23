@@ -14,3 +14,5 @@ venv
 **/all_posts_*
 **/tmp.json
 **/tmp.txt
+
+.DS_Store
