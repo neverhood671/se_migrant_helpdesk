@@ -1,0 +1,15 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "External User")
+System(telegram, "Telegram")
+
+System_Boundary(hd, "Helpdesk"){
+    System(sys, "System", "OurPrototype")
+}
+user -> telegram
+telegram -> hd
+
+
+@enduml

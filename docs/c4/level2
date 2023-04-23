@@ -1,0 +1,21 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User", "External User")
+System(telegram, "Telegram")
+
+System_Boundary(hd, "Helpdesk"){
+    ContainerDb(db, "DynamoDB", "NoSQL")
+    Container(gateway, "API Gateway")
+    Container(lambda, "AWS Lambda", "python", "Main Bot Logic")
+    ContainerDb(secret, "AWS Secrets Manager", "", "Stores secret keys")
+}
+user -> telegram
+telegram -> gateway
+gateway -> lambda
+lambda -> secret
+lambda --> db
+
+
+@enduml

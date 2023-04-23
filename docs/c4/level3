@@ -1,0 +1,30 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+Person(user, "User", "External User")
+System(telegram, "Telegram")
+
+System_Boundary(hd, "Helpdesk"){
+    ContainerDb(db, "DynamoDB", "NoSQL")
+    Container(gateway, "API Gateway")
+    Container_Boundary(lambda, "AWS Lambda") {
+        Component(bot, "Bot Message Handler", "python")
+        Component(state, "Bot State Manager", "python")
+        Component(model, "Sklearn Model", "python", "Topic recognition model")
+        Component(feedback, "Feedback Manager", "python")
+    }
+    ContainerDb(secret, "AWS Secrets Manager", "", "Stores secret keys")
+}
+user --> telegram
+telegram --> gateway
+gateway --> bot
+bot --> state
+bot --> model
+bot --> secret
+bot --> feedback
+state --> db
+feedback --> db
+
+
+@enduml
