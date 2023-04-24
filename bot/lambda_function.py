@@ -2,6 +2,7 @@ import json
 import logging
 
 import telegram_utils as t_utils
+import topics_modelling as model
 from user_requests_storage import UserRequestsStorage
 
 logger = logging.getLogger(__name__)
@@ -33,8 +34,9 @@ def process_message(event):
     message_id = message['message_id']
     chat_id = message['chat']['id']
     first_name = message['chat']['first_name']
+    topic = model.get_topic_for_message(text)
 
-    response_text = f'{first_name}, you said: {text}'
+    response_text = f'{first_name}, you want to talk about: {topic}'
     data = {
         'text': response_text.encode('utf8'),
         'chat_id': chat_id,
