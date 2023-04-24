@@ -30,6 +30,12 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 4. Write name for your API, for example: `se_migrant_help_bot_api`
 5. Click "Create API"
 
+### Create storage for code
+
+1. Open Amazon S3
+2. Click "Create bucket"
+3. Enter bucket name and again click "Create bucket"
+
 ### Create lambda
 
 1. Open "Lambda"
@@ -40,7 +46,7 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 6. Click "Create Function"
 7. For new lambda open tab "Configuration" -> "Environment variables"
 8. Add variable `SECRET_REGION_NAME` with your secrets region
-8. Add variable `DYNAMODB_REGION_NAME` with your DynamoDB region
+9. Add variable `DYNAMODB_REGION_NAME` with your DynamoDB region
 
 ### Add code to lambda
 
@@ -111,5 +117,16 @@ Send any message to the bot
 ### How to rebuild
 
 1. Run script [build_lambda.sh](build_lambda.sh)
-2. Open tab "Code" in AWS
-3. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
+2. Go to Amazon S3
+3. Open your bucket
+4. Click "Upload" and select archive "se_migrant_help_bot.zip"
+5. Click on uploaded file
+6. Copy "Object URL"
+7. Go to "Lambda"
+8. Open "Code" tab
+9. Click to "Upload from" and paste "Object URL"
+
+## How to test a model
+
+1. Run script [build_lambda_local.sh](build_lambda_local.sh)
+2. Run script [model_test.py](model_test.py)
