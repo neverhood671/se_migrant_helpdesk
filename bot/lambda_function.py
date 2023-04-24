@@ -2,9 +2,11 @@ import json
 import logging
 
 import telegram_utils as t_utils
-from dynamo_db_provider import DynamoDb
+from user_requests_storage import UserRequestsStorage
 
 logger = logging.getLogger(__name__)
+
+user_requests_storage = UserRequestsStorage()
 
 
 def lambda_handler(event, context):
@@ -51,7 +53,7 @@ def process_message(event):
         print(f'Response content: {response.content}')
     else:
         response_message_id = json.loads(response.content)['result']['message_id']
-        DynamoDb().save_question(
+        user_requests_storage.save_question(
             chat_id=chat_id,
             question_message_id=message_id,
             question=text,
@@ -90,7 +92,7 @@ def process_callback(event):
         print(f'Response status code: {response.status_code}')
         print(f'Response content: {response.content}')
     else:
-        DynamoDb().save_vote(
+        user_requests_storage.save_vote(
             chat_id=chat_id,
             response_message_id=message_id,
             vote=callback_data

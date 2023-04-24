@@ -44,12 +44,7 @@ Official tutorial: [https://core.telegram.org/bots/tutorial](https://core.telegr
 
 ### Add code to lambda
 
-1. Open console in your device
-2. Go to directory "se_migrant_help_bot"
-3. Run `pip install requests -t ./`
-4. Create archive: `zip -r se_migrant_help_bot.zip ./ -x "README.md" -x "*.iml" -x "*.zip"`
-5. Open tab "Code" in AWS
-6. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
+1. Look to [How to rebuild](#how-to-rebuild)
 
 ### Add permissions for secrets
 
@@ -115,7 +110,6 @@ Send any message to the bot
 
 ### How to rebuild
 
-1. Remove file "se_migrant_help_bot.zip": `rm se_migrant_help_bot.zip`
-2. Create archive: `zip -r se_migrant_help_bot.zip ./ -x "README.md" -x "*.iml" -x "*.zip"`
-3. Open tab "Code" in AWS
-4. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
+1. Run script [build_lambda.sh](build_lambda.sh)
+2. Open tab "Code" in AWS
+3. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
