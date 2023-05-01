@@ -6,6 +6,9 @@ venv
 /bot/model_kmeans
 /bot/model_vectorizer
 
+/postnummer-kommune-collection/*/**
+/postnummer-kommune-collection/*.json
+
 *.iml
 *.ipr
 **/.gradlew/
