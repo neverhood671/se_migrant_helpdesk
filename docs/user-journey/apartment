@@ -1,0 +1,56 @@
+
+@startuml
+
+start
+: Topic is recognized - "apartment";
+: Get started on finding a home as soon as possible,
+  especially if you’ll be living in a big city like
+  Stockholm, Gothenburg or Malmö.
+  You can rent ‘first-hand’ or ‘second-hand’ in Sweden.
+  First-hand (första hand) means you sign an agreement
+  with the owner of the building, while second-hand
+  (andra hand) means you sign an agreement with someone
+  who owns the flat or has the first-hand contract on the flat.;
+
+while (Want more info about housing in Sweden?) is (yes)
+    switch (What do you want to know?)
+    case ()
+        group ‘first-hand’
+        : In the big cities, obtaining a first-hand contract
+          generally requires several years of queueing.
+          If you are considering a longer stay in Sweden,
+          you might consider signing up at a “bostadskö” asap.
+          Most Swedes sign up as soon as they are allowed
+          (nowadays once they turn 18) and the waiting time
+          on these “bostadskö” are very long. However,
+          if you are patient and not too picky about
+          your choice this might be an option.;
+        : Here you can find the links to the main queues
+          in Sweden: <link>;
+        end group
+    case ()
+        group ‘second-hand’
+        :For second-hand contracts, there are many dedicated accomodation
+        websites. Most ads are in Swedish, but you will find some
+        in English too.
+         - blocket.se
+         - qasa.se
+         - samtrygg.se
+         - beresident.se;
+        :Write an outstanding rental application
+        Introduce yourself properly. Start by introducing yourself and make sure to mention:
+         - Name, age, occupation
+         - Mention why you are moving to Sweden (for work, study, etc.).
+         - Explain who is going to live with you and why.
+        Good things to mention if you have them
+         - Stable income or a permanent job.
+         - No payment defaults.
+         - References from previous landlords or your employer.;
+
+        end group
+
+    endswitch
+endwhile (no)
+stop
+@enduml
+
