@@ -5,9 +5,10 @@
 home: Bot tries to recognize msg topic
 help: Bot provides info about itself
 feedback: Bot asks for feedback
-state c <<choice>>
 
-state topic_recognized {
+state topic_recognized: Bot got an idea of the topic and asks user if it is correct
+
+state topic_confirmed {
   pn: get a personal number
   bank: open a bank account
   apartment: get an apartment
@@ -15,21 +16,22 @@ state topic_recognized {
   culture: join local comunities
 }
 
-
 [*] --> home
 home  -> help
 help  -> home
-home --> c
-c  --> pn
-c  --> bank
-c  --> apartment
-c  --> swedish
-c  --> culture
+home --> topic_recognized
+topic_recognized --> topic_confirmed
+
+topic_confirmed  --> pn
+topic_confirmed  --> bank
+topic_confirmed  --> apartment
+topic_confirmed  --> swedish
+topic_confirmed  --> culture
 
 pn -down-> feedback
 bank -down-> feedback
 apartment -down-> feedback
 swedish -down-> feedback
 culture -down-> feedback
-feedback  -down-> [*] 
+feedback  -down-> [*]
 @enduml
