@@ -1,0 +1,60 @@
+
+@startuml
+
+start
+:Topic is recognized - Lang;
+:Sweden has free educational program - SFI;
+while (Want more info about SFI?) is (yes)
+    switch (What do you want?)
+    case ()
+        group Can I study SFI?
+            if ((Are you older than 16?) and
+            (Do you have a personal number?) and
+            (Have you studied swedish before?) and
+            (Is your level of Swedish better B1 or higher?) then (yes)
+                :Yes! You are entitled to study SFI;
+            else
+                :No, unfortunately you can not study SFI;
+            endif
+        end group
+    case ()
+        group What SFI level should I start with?
+            if (Can you read and write on your mother language?) then (yes)
+                if (Have you studied at school for 8 years or more?) then (yes)
+                    if (Have you studied SFI before?) then (yes)
+                        if (Have you passed exam for course C?) then (yes)
+                            :You can start SFI course 3D;
+                        else (no)
+                            :You can join SFI course 3C;
+                        endif
+                    else
+                        :You can start SFI course 3C;
+                    endif
+                else (no)
+                    :You can start SFI course 2B;
+                endif
+            else
+                :You can start SFI course 1A;
+            endif
+        end group
+
+    case ()
+        group How can I start SFI?
+            :You need to apply through you municipality (kommun) adult education office (komvux). Most of them have online application forms. ;
+            :Enter you <post number> to get more info;
+            if (<post number>) then (exists)
+                :You municipality name is <municipality>;
+                if (We have link to komvux) then (yes)
+                    :Visit you komvux website <komvux link>;
+                else (no)
+                    :We only have you <kommun website link>. You can follow the link, find your kommun contacts and ask them about SFI;
+                endif
+            else
+                :It does not look like swedish post number. Make sure to enter a correct one;
+            endif
+        end group
+    endswitch
+endwhile (no)
+stop
+@enduml
+
