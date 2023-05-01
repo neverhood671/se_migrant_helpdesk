@@ -39,7 +39,9 @@ def request_telegram_token():
         # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
         logger.error(
             "Couldn't get secret. Here's why: %s: %s",
-            err.response['Error']['Code'], err.response['Error']['Message'])
+            err.response['Error']['Code'], err.response['Error']['Message'],
+            exc_info=True
+        )
         raise err
 
     # Decrypts secret using the associated KMS key.

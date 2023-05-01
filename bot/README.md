@@ -126,6 +126,13 @@ Send any message to the bot
 8. Open "Code" tab
 9. Click to "Upload from" and paste "Object URL"
 
+### How to rebuild bot without model
+
+1. Run script [build_lambda_light.sh](build_lambda_light.sh)
+2. Go to "Lambda"
+3. Open "Code" tab
+4. Click to "Upload from" and select archive "se_migrant_help_bot.zip"
+
 ## How to test a model
 
 1. Run script [build_lambda_local.sh](build_lambda_local.sh)

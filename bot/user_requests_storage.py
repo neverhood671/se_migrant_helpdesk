@@ -11,13 +11,12 @@ USER_REQUESTS_TABLE = 'user_requests'
 
 class UserRequestsStorage:
     def __init__(self):
+        self.dynamo_db = DynamoDb()
         self.__create_table_if_not_exists()
 
-    @staticmethod
-    def __create_table_if_not_exists():
+    def __create_table_if_not_exists(self):
         try:
-            dynamo_db = DynamoDb()
-            dynamodb_client = dynamo_db.get_client()
+            dynamodb_client = self.dynamo_db.get_client()
             existing_tables = dynamodb_client.list_tables()['TableNames']
             if USER_REQUESTS_TABLE not in existing_tables:
                 dynamodb_client.create_table(
@@ -36,12 +35,14 @@ class UserRequestsStorage:
         except ClientError as err:
             logger.error(
                 "Couldn't create table %s. Here's why: %s: %s", USER_REQUESTS_TABLE,
-                err.response['Error']['Code'], err.response['Error']['Message'])
+                err.response['Error']['Code'], err.response['Error']['Message'],
+                exc_info=True
+            )
             raise err
 
     def save_question(self, chat_id, question_message_id, question, response_message_id, answer):
         try:
-            DynamoDb().get_client().put_item(
+            self.dynamo_db.get_client().put_item(
                 TableName=USER_REQUESTS_TABLE,
                 Item={
                     "chat_id": {'S': str(chat_id)},
@@ -59,13 +60,14 @@ class UserRequestsStorage:
                 "Here's why: %s: %s",
                 USER_REQUESTS_TABLE,
                 chat_id, question_message_id, question, response_message_id, answer,
-                err.response['Error']['Code'], err.response['Error']['Message']
+                err.response['Error']['Code'], err.response['Error']['Message'],
+                exc_info=True
             )
             raise err
 
     def save_vote(self, chat_id, response_message_id, vote):
         try:
-            DynamoDb().get_client().update_item(
+            self.dynamo_db.get_client().update_item(
                 TableName=USER_REQUESTS_TABLE,
                 Key={'chat_id': {'S': str(chat_id)}, 'response_message_id': {'S': str(response_message_id)}},
                 UpdateExpression="SET vote = :val",
@@ -78,5 +80,7 @@ class UserRequestsStorage:
                 "Here's why: %s: %s",
                 vote, USER_REQUESTS_TABLE,
                 str(chat_id), str(response_message_id),
-                err.response['Error']['Code'], err.response['Error']['Message'])
+                err.response['Error']['Code'], err.response['Error']['Message'],
+                exc_info=True
+            )
             raise err
