@@ -5,6 +5,8 @@ venv
 /bot/*.zip
 /bot/model_kmeans
 /bot/model_vectorizer
+/bot/six.py
+/bot/threadpoolctl.py
 
 /postnummer-kommune-collection/*/**
 /postnummer-kommune-collection/*.json

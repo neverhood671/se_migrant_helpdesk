@@ -85,9 +85,16 @@ def start_new_session(tg_message: t_utils.MessageAction):
     state_id = 'make_topic_prediction'
     make_topic_prediction_node = chat_states.get_state(state_id)
 
-    topic_node_id = make_topic_prediction_node.get_next_state(user_session=None, message=tg_message)
+    new_user_session = user_session_storage.create_new_session(
+        chat_id=str(tg_message.chat_id),
+        state_id=state_id,
+        current_message_id=None,
+        current_text=tg_message.new_text
+    )
+
+    topic_node_id = make_topic_prediction_node.get_next_state(user_session=new_user_session, message=tg_message)
     topic_node = chat_states.get_state(topic_node_id)
-    data = topic_node.get_message_data(tg_message)
+    data = topic_node.get_message_data(user_session=new_user_session, message=tg_message)
     if data is None:
         raise Exception(f'Empty data for topic node {topic_node_id}')
 
@@ -98,12 +105,10 @@ def start_new_session(tg_message: t_utils.MessageAction):
         print(f'Response content: {response.content}')
     else:
         response_message_id = json.loads(response.content)['result']['message_id']
-        user_session_storage.create_session(
-            chat_id=str(tg_message.chat_id),
-            state_id=topic_node_id,
-            current_message_id=response_message_id,
-            current_text=tg_message.new_text
-        )
+        new_user_session.state_id = topic_node_id
+        new_user_session.current_message_id = response_message_id
+        new_user_session.current_text = tg_message.new_text
+        user_session_storage.save_new_session(new_user_session)
 
 
 def do_for_session(tg_message: t_utils.MessageAction, user_session: UserSession):
@@ -125,6 +130,7 @@ def repeat(
 ):
     repeat_text = f'Sorry, I don\'t recognized your answer. could you repeat?\n\n'
     data = current_node.get_message_data(
+        user_session=user_session,
         message=tg_message,
         prefix=repeat_text
     )
@@ -159,6 +165,7 @@ def update_session(
 ):
     next_node = chat_states.get_state(next_state_id)
     data = next_node.get_message_data(
+        user_session=user_session,
         message=tg_message,
     )
     response = t_utils.send_new_message(data)

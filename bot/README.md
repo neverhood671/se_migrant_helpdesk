@@ -137,3 +137,33 @@ Send any message to the bot
 
 1. Run script [build_lambda_local.sh](build_lambda_local.sh)
 2. Run script [model_test.py](model_test.py)
+
+## How to test a pipelines
+
+1. Run script [build_lambda_local.sh](build_lambda_local.sh)
+2. Run script [chat_states_test.py](chat_states_test.py)
+
+## About pipeline's nodes
+
+### Special node ids
+
+1. `feedback` - node for request feedback about topic
+2. `HOME` - delete current session
+
+### Node types
+
+#### SimpleOptionNode
+
+```yaml
+node_id:
+  node_type: "SimpleOptionNode"
+  content: "Some text"
+  exit_node_content: "Text for special button [optional]"
+  exit_node_id: "Id node for special button [optional]"
+  links:  # optional
+    - content: "Text for link 1"
+      url: "url http://..."
+  options:  # optional
+    - content: "Text for button 1"
+      next_node_id: "Id node for button 1"
+```

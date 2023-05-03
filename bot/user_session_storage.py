@@ -19,15 +19,19 @@ class UserSession:
             current_message_id: int,
             current_text: str,
             session_id: str = None,
+            session_attributes: dict = None,
     ):
         if session_id is None:
             session_id = str(uuid.uuid4())
+        if session_attributes is None:
+            session_attributes = dict()
 
         self.chat_id = chat_id
         self.session_id = session_id
         self.state_id = state_id
         self.current_message_id = current_message_id
         self.current_text = current_text
+        self.session_attributes = session_attributes
 
     def get_update_attribute_values(self):
         return {
@@ -35,6 +39,7 @@ class UserSession:
             ':state_id': {'S': self.state_id},
             ':current_message_id': {'N': str(self.current_message_id)},
             ':current_text': {'S': self.current_text},
+            ':session_attributes': {'M': self.__attributes_to_ddb_map()},
         }
 
     def to_item(self):
@@ -44,7 +49,14 @@ class UserSession:
             'state_id': {'S': self.state_id},
             'current_message_id': {'N': str(self.current_message_id)},
             'current_text': {'S': self.current_text},
+            'session_attributes': {'M': self.__attributes_to_ddb_map()},
         }
+
+    def __attributes_to_ddb_map(self):
+        attributes = dict()
+        for k, v in self.session_attributes.items():
+            attributes[k] = {'S': v}
+        return attributes
 
     def get_key_item(self):
         return {'chat_id': {'S': self.chat_id}}
@@ -93,12 +105,16 @@ class UserSessionStorage:
             data = response.get('Item')
             if data is None:
                 return None
+            session_attributes = dict()
+            for k, v in data.get('session_attributes')['M'].items():
+                session_attributes[k] = v['S']
             return UserSession(
                 chat_id=chat_id,
                 session_id=data.get('session_id')['S'],
                 state_id=data.get('state_id')['S'],
                 current_message_id=int(data.get('current_message_id')['N']),
                 current_text=data.get('current_text')['S'],
+                session_attributes=session_attributes,
             )
         except ClientError as err:
             logger.error(
@@ -112,23 +128,25 @@ class UserSessionStorage:
             )
             raise err
 
-    def create_session(
+    def create_new_session(
             self,
             chat_id: str,
             state_id: str,
-            current_message_id: int,
-            current_text: str
-    ) -> UserSession:
-        new_session = UserSession(
+            current_message_id: Optional[int] = None,
+            current_text: str = ''
+    ):
+        return UserSession(
             chat_id=chat_id,
             state_id=state_id,
             current_message_id=current_message_id,
             current_text=current_text,
         )
-        self.__save_session(new_session)
-        return new_session
 
-    def __save_session(self, new_session: UserSession):
+    def save_new_session(self, new_session: UserSession):
+        if new_session.current_message_id is None:
+            raise Exception('Message id is None for new session')
+        if new_session.current_text == '':
+            raise Exception('Message text is empty for new session')
         try:
             self.dynamo_db.get_client().put_item(
                 TableName=USER_SESSION_TABLE,
@@ -154,7 +172,8 @@ class UserSessionStorage:
                 UpdateExpression="SET session_id = :session_id"
                                  ", state_id = :state_id"
                                  ", current_message_id = :current_message_id"
-                                 ", current_text = :current_text",
+                                 ", current_text = :current_text"
+                                 ", session_attributes = :session_attributes",
                 ExpressionAttributeValues=user_session.get_update_attribute_values(),
                 ReturnValues="UPDATED_NEW"
             )

@@ -1,0 +1,159 @@
+head_topic_swedish:
+  node_type: "SimpleOptionNode"
+  content: "Sweden has free educational program - SFI\nWant more info about SFI?"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - content: "Can I study SFI?"
+      next_node_id: "sfi_perm_age"
+    - content: "What SFI level should I start with?"
+      next_node_id: "sfi_level"
+    - content: "How can I start SFI?"
+      next_node_id: "sfi_howto"
+
+sfi_perm_age:
+  node_type: "SimpleOptionNode"
+  content: "Are you older than 16?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_perm_personalnumber"
+    - content: "No"
+      next_node_id: "sfi_perm_no"
+
+sfi_perm_personalnumber:
+  node_type: "SimpleOptionNode"
+  content: "Have you studied swedish before?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_perm_levelb1"
+    - content: "No"
+      next_node_id: "sfi_perm_no"
+
+sfi_perm_levelb1:
+  node_type: "SimpleOptionNode"
+  content: "Is your level of Swedish better B1 or higher?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_perm_yes"
+    - content: "No"
+      next_node_id: "sfi_perm_no"
+
+sfi_perm_yes:
+  node_type: "SimpleOptionNode"
+  content: "Yes! You are entitled to study SFI"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_perm_no:
+  node_type: "SimpleOptionNode"
+  content: "No, unfortunately you can not study SFI"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_level:
+  node_type: "SimpleOptionNode"
+  content: "Can you read and write on your mother language?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_level_school8more"
+    - content: "No"
+      next_node_id: "sfi_level_a1"
+
+sfi_level_school8more:
+  node_type: "SimpleOptionNode"
+  content: "Have you studied at school for 8 years or more?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_level_sfibefore"
+    - content: "No"
+      next_node_id: "sfi_level_b2"
+
+sfi_level_sfibefore:
+  node_type: "SimpleOptionNode"
+  content: "Have you studied SFI before?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_level_passc"
+    - content: "No"
+      next_node_id: "sfi_level_c3"
+
+sfi_level_passc:
+  node_type: "SimpleOptionNode"
+  content: "Have you passed exam for course C?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - content: "Yes"
+      next_node_id: "sfi_level_d3"
+    - content: "No"
+      next_node_id: "sfi_level_c3j"
+
+sfi_level_a1:
+  node_type: "SimpleOptionNode"
+  content: "You can start SFI course 1A"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_level_b2:
+  node_type: "SimpleOptionNode"
+  content: "You can start SFI course 2B"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_level_c3:
+  node_type: "SimpleOptionNode"
+  content: "You can start SFI course 3C"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_level_c3j:
+  node_type: "SimpleOptionNode"
+  content: "You can join SFI course 3C"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_level_d3:
+  node_type: "SimpleOptionNode"
+  content: "You can start SFI course 3D"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_howto:
+  node_type: "PostnumberKomvuxSearcherNode"
+  content: "You need to apply through you municipality (kommun) adult education office (komvux). Most of them have online application forms.
+  Enter you <post number> to get more info"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  unknown_postnumer_node_id: "sfi_howto_unknown_postnumer"
+  komvux_exists_node_id: "sfi_howto_komvux_exists"
+  komvux_doesnt_exists_node_id: "sfi_howto_komvux_doesnt_exists"
+
+sfi_howto_unknown_postnumer:
+  node_type: "SimpleOptionNode"
+  content: "It does not look like swedish post number. Make sure to enter a correct one"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_howto_komvux_exists:
+  node_type: "SimpleOptionNode"
+  content: "Visit you komvux website <komvux_link>"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"
+
+sfi_howto_komvux_doesnt_exists:
+  node_type: "SimpleOptionNode"
+  content: "We only have you <kommun_link>. You can follow the link, find your kommun contacts and ask them about SFI"
+  exit_node_content: "Ok"
+  exit_node_id: "head_topic_swedish"

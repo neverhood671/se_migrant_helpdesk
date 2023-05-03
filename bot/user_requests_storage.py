@@ -12,7 +12,7 @@ USER_REQUESTS_TABLE = 'user_requests'
 class UserRequestsStorage:
     def __init__(self):
         self.dynamo_db = DynamoDb()
-        self.__create_table_if_not_exists()
+        # self.__create_table_if_not_exists()
 
     def __create_table_if_not_exists(self):
         try:

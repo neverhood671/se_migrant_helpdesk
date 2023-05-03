@@ -1,0 +1,5 @@
+head_topic_pn:
+  node_type: "SimpleOptionNode"
+  content: "Coming soon..."
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
