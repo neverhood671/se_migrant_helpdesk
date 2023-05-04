@@ -96,6 +96,37 @@ class AbstractChatNode:
         raise NotImplementedError("Please Implement this method")
 
 
+class StaticTopicNode(AbstractChatNode):
+    def __init__(self, node_id: str = 'static_topic'):
+        AbstractChatNode.__init__(self, node_id)
+
+    def _get_message_data_for_lock_message(
+            self,
+            user_session: UserSession,
+            action_text: str
+    ) -> Optional[dict]:
+        return None
+
+    def get_message_data(
+            self,
+            user_session: UserSession,
+            message: t_utils.MessageAction,
+            prefix: str = ""
+    ) -> Optional[dict]:
+        return None
+
+    def _is_expected_action(self, action_text: str) -> bool:
+        return True
+
+    def _get_next_state(
+            self,
+            user_session: Optional[UserSession],
+            message: t_utils.MessageAction,
+            action_text: str
+    ) -> str:
+        return 'select_topic'
+
+
 class MakeTopicPredictionNode(AbstractChatNode):
     def __init__(self, node_id: str = 'make_topic_prediction'):
         AbstractChatNode.__init__(self, node_id)
@@ -127,6 +158,61 @@ class MakeTopicPredictionNode(AbstractChatNode):
         topic = model.get_topic_for_message(message.new_text)
         user_session.session_attributes['topic'] = topic
         return 'check_topic_prediction'
+
+
+class SelectTopicNode(AbstractChatNode):
+    EXPECTED_ACTIONS = {'swedish', 'bank', 'pn', 'apartment', 'culture'}
+
+    def __init__(self):
+        AbstractChatNode.__init__(self, 'check_topic_prediction')
+
+    def _get_message_data_for_lock_message(
+            self,
+            user_session: UserSession,
+            action_text: str
+    ) -> Optional[dict]:
+        response_text = f'{user_session.current_text}\n\nYou selected {action_text}'
+        return {
+            'text': response_text.encode('utf8'),
+            'chat_id': user_session.chat_id,
+            'message_id': user_session.current_message_id,
+            'reply_markup': {
+                'inline_keyboard': [[]]
+            }
+        }
+
+    def get_message_data(
+            self,
+            user_session: UserSession,
+            message: t_utils.MessageAction,
+            prefix: str = ""
+    ) -> Optional[dict]:
+        response_text = 'Choose the option you want to talk about'
+        return {
+            'text': response_text.encode('utf8'),
+            'chat_id': message.chat_id,
+            'reply_markup': {
+                'inline_keyboard': [
+                    [{'text': 'Swedish: SFI', 'callback_data': 'swedish'}],
+                    [{'text': 'Bank', 'callback_data': 'bank'}],
+                    [{'text': 'Personal number', 'callback_data': 'pn'}],
+                    [{'text': 'Apartment', 'callback_data': 'apartment'}],
+                    [{'text': 'Culture', 'callback_data': 'culture'}],
+                ]
+            }
+        }
+
+    def _is_expected_action(self, action_text: str) -> bool:
+        return action_text in SelectTopicNode.EXPECTED_ACTIONS
+
+    def _get_next_state(
+            self,
+            user_session: Optional[UserSession],
+            message: t_utils.MessageAction,
+            action_text: str
+    ) -> str:
+        user_session.session_attributes['topic'] = action_text
+        return f'head_topic_{action_text}'
 
 
 class CheckTopicPredictionNode(AbstractChatNode):
@@ -208,7 +294,7 @@ class CheckTopicPredictionNode(AbstractChatNode):
         if action_text == 'good_answer':
             return f'head_topic_{user_session.session_attributes["topic"]}'
         else:
-            return HOME_STATE_ID
+            return 'select_topic'
 
 
 class FeedbackNode(AbstractChatNode):
@@ -421,15 +507,20 @@ class PostnumberKomvuxSearcherNode(AbstractChatNode):
         self.exit_node_content = node_dict.get('exit_node_content')
 
     def _normalize_action(self, action_text: str) -> str:
+        if self.exit_node_id is not None and action_text.lower() == 'exit':
+            return self.exit_node_id
         return re.sub(r"\s+", "", action_text)
 
     def _is_expected_action(self, action_text: str) -> bool:
-        if self.exit_node_id is not None and action_text.lower() == 'exit':
+        if self.exit_node_id is not None and action_text == self.exit_node_id:
             return True
         return bool(re.match(r"^\d{5}$", action_text))
 
     def _get_message_data_for_lock_message(self, user_session: UserSession, action_text: str) -> Optional[dict]:
-        response_text = f'{user_session.current_text}\n\nYour answer: {action_text}'
+        if self.exit_node_id is not None and action_text == self.exit_node_id:
+            response_text = user_session.current_text
+        else:
+            response_text = f'{user_session.current_text}\n\nYour answer: {action_text}'
         return {
             'text': response_text.encode('utf8'),
             'chat_id': user_session.chat_id,
@@ -463,11 +554,11 @@ class PostnumberKomvuxSearcherNode(AbstractChatNode):
             message: t_utils.MessageAction,
             action_text: str
     ) -> str:
-        if self.exit_node_id is not None and action_text == 'exit':
+        if self.exit_node_id is not None and action_text == self.exit_node_id:
             return self.exit_node_id
 
         # TODO: add postnum recognition
-        user_session.session_attributes["postnumer"] = "postnumer"
+        user_session.session_attributes["postnumer"] = action_text
         if action_text == '11111':
             return self.unknown_postnumer_node_id
         elif action_text == '22222':
@@ -486,6 +577,8 @@ def load_base_states():
     global ALL_STATES
     ALL_STATES['make_topic_prediction'] = MakeTopicPredictionNode()
     ALL_STATES['check_topic_prediction'] = CheckTopicPredictionNode()
+    ALL_STATES['static_topic'] = StaticTopicNode()
+    ALL_STATES['select_topic'] = SelectTopicNode()
     ALL_STATES['feedback'] = FeedbackNode()
 
 

@@ -10,6 +10,8 @@ from user_session_storage import USER_SESSION_STORAGE, UserSession
 logger = logging.getLogger(__name__)
 
 SYSTEM_MESSAGES = {'/help', '/start', '/reset'}
+INIT_STATE_ID = 'make_topic_prediction'
+# INIT_STATE_ID = 'static_topic'
 
 
 def lambda_handler(event, context):
@@ -82,12 +84,11 @@ def process_system_message(tg_message: t_utils.MessageAction):
 
 
 def start_new_session(tg_message: t_utils.MessageAction):
-    state_id = 'make_topic_prediction'
-    make_topic_prediction_node = chat_states.get_state(state_id)
+    make_topic_prediction_node = chat_states.get_state(INIT_STATE_ID)
 
     new_user_session = USER_SESSION_STORAGE.create_new_session(
         chat_id=str(tg_message.chat_id),
-        state_id=state_id,
+        state_id=INIT_STATE_ID,
         current_message_id=None,
         current_text=tg_message.new_text
     )
