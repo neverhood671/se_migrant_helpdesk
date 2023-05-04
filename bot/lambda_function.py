@@ -104,10 +104,10 @@ def start_new_session(tg_message: t_utils.MessageAction):
         print(f'Response status code: {response.status_code}')
         print(f'Response content: {response.content}')
     else:
-        response_message_id = json.loads(response.content)['result']['message_id']
+        response_content = json.loads(response.content)
         new_user_session.state_id = topic_node_id
-        new_user_session.current_message_id = response_message_id
-        new_user_session.current_text = tg_message.new_text
+        new_user_session.current_message_id = response_content['result']['message_id']
+        new_user_session.current_text = response_content['result']['text']
         USER_SESSION_STORAGE.save_new_session(new_user_session)
 
 
@@ -151,8 +151,7 @@ def repeat(
         t_utils.update_message(data)
 
         response_content = json.loads(response.content)
-        response_message_id = response_content['result']['message_id']
-        user_session.current_message_id = response_message_id
+        user_session.current_message_id = response_content['result']['message_id']
         user_session.current_text = response_content['result']['text']
         USER_SESSION_STORAGE.update_user_session(user_session)
 
@@ -179,10 +178,10 @@ def update_session(
         if data is not None:
             t_utils.update_message(data)
 
-        response_message_id = json.loads(response.content)['result']['message_id']
+        response_content = json.loads(response.content)
         user_session.state_id = next_state_id
-        user_session.current_message_id = response_message_id
-        user_session.current_text = tg_message.new_text
+        user_session.current_message_id = response_content['result']['message_id']
+        user_session.current_text = response_content['result']['text']
         USER_SESSION_STORAGE.update_user_session(user_session)
 
 

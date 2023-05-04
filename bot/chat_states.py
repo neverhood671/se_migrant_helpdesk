@@ -217,6 +217,30 @@ class FeedbackNode(AbstractChatNode):
     def __init__(self):
         AbstractChatNode.__init__(self, 'feedback')
 
+    def _get_message_data_for_lock_message(
+            self,
+            user_session: UserSession,
+            action_text: str
+    ) -> Optional[dict]:
+        if action_text == 'bad_conversation':
+            vote = '🙁'
+        elif action_text == 'normal_conversation':
+            vote = '😐'
+        elif action_text == 'good_conversation':
+            vote = '🙂'
+        else:
+            vote = action_text
+
+        response_text = f'{user_session.current_text}\n\nYou voted as {vote}'
+        return {
+            'text': response_text.encode('utf8'),
+            'chat_id': user_session.chat_id,
+            'message_id': user_session.current_message_id,
+            'reply_markup': {
+                'inline_keyboard': [[]]
+            }
+        }
+
     def get_message_data(
             self,
             user_session: UserSession,
@@ -269,30 +293,6 @@ class FeedbackNode(AbstractChatNode):
                 topic_id=topic,
                 vote=action_text
             )
-
-    def _get_message_data_for_lock_message(
-            self,
-            user_session: UserSession,
-            action_text: str
-    ) -> Optional[dict]:
-        if action_text == 'bad_conversation':
-            vote = '🙁'
-        elif action_text == 'normal_conversation':
-            vote = '😐'
-        elif action_text == 'good_conversation':
-            vote = '🙂'
-        else:
-            vote = action_text
-
-        response_text = f'{user_session.current_text}\n\nYou voted as {vote}'
-        return {
-            'text': response_text.encode('utf8'),
-            'chat_id': user_session.chat_id,
-            'message_id': user_session.current_message_id,
-            'reply_markup': {
-                'inline_keyboard': [[]]
-            }
-        }
 
     def _get_next_state(
             self,
@@ -384,8 +384,15 @@ class SimpleOptionNode(AbstractChatNode):
                 {'text': l['content'], 'url': l['url']}
             )
 
+        response_text = user_session.current_text
+        if self.exit_node_id is not None and action_text != self.exit_node_id:
+            for o in self.options:
+                if action_text == o['next_node_id']:
+                    response_text += f'\n\nYour answer: {o["content"]}'
+                    break
+
         return {
-            'text': apply_session_params(self.content, user_session).encode('utf8'),
+            'text': response_text.encode('utf8'),
             'chat_id': user_session.chat_id,
             'message_id': user_session.current_message_id,
             'reply_markup': {
@@ -422,8 +429,9 @@ class PostnumberKomvuxSearcherNode(AbstractChatNode):
         return bool(re.match(r"^\d{5}$", action_text))
 
     def _get_message_data_for_lock_message(self, user_session: UserSession, action_text: str) -> Optional[dict]:
+        response_text = f'{user_session.current_text}\n\nYour answer: {action_text}'
         return {
-            'text': apply_session_params(self.content, user_session).encode('utf8'),
+            'text': response_text.encode('utf8'),
             'chat_id': user_session.chat_id,
             'message_id': user_session.current_message_id,
             'reply_markup': {
