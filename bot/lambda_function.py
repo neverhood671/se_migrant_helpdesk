@@ -3,11 +3,11 @@ import logging
 
 import chat_states
 import telegram_utils as t_utils
-from user_session_storage import UserSessionStorage, UserSession
+from user_feedback_storage import USER_FEEDBACK_STORAGE
+from user_requests_storage import USER_REQUESTS_STORAGE
+from user_session_storage import USER_SESSION_STORAGE, UserSession
 
 logger = logging.getLogger(__name__)
-
-user_session_storage = UserSessionStorage()
 
 SYSTEM_MESSAGES = {'/help', '/start', '/reset'}
 
@@ -64,7 +64,7 @@ def process_callback(event):
 
 
 def update_user_state(tg_message: t_utils.MessageAction):
-    user_session = user_session_storage.get_session(str(tg_message.chat_id))
+    user_session = USER_SESSION_STORAGE.get_session(str(tg_message.chat_id))
     if user_session is None:
         if tg_message.new_text in SYSTEM_MESSAGES:
             process_system_message(tg_message)
@@ -76,16 +76,16 @@ def update_user_state(tg_message: t_utils.MessageAction):
 
 def process_system_message(tg_message: t_utils.MessageAction):
     if tg_message.new_text == '/reset':
-        user_session = user_session_storage.get_session(str(tg_message.chat_id))
+        user_session = USER_SESSION_STORAGE.get_session(str(tg_message.chat_id))
         if user_session is not None:
-            user_session_storage.delete_session(user_session)
+            USER_SESSION_STORAGE.delete_session(user_session)
 
 
 def start_new_session(tg_message: t_utils.MessageAction):
     state_id = 'make_topic_prediction'
     make_topic_prediction_node = chat_states.get_state(state_id)
 
-    new_user_session = user_session_storage.create_new_session(
+    new_user_session = USER_SESSION_STORAGE.create_new_session(
         chat_id=str(tg_message.chat_id),
         state_id=state_id,
         current_message_id=None,
@@ -108,7 +108,7 @@ def start_new_session(tg_message: t_utils.MessageAction):
         new_user_session.state_id = topic_node_id
         new_user_session.current_message_id = response_message_id
         new_user_session.current_text = tg_message.new_text
-        user_session_storage.save_new_session(new_user_session)
+        USER_SESSION_STORAGE.save_new_session(new_user_session)
 
 
 def do_for_session(tg_message: t_utils.MessageAction, user_session: UserSession):
@@ -154,7 +154,7 @@ def repeat(
         response_message_id = response_content['result']['message_id']
         user_session.current_message_id = response_message_id
         user_session.current_text = response_content['result']['text']
-        user_session_storage.update_user_session(user_session)
+        USER_SESSION_STORAGE.update_user_session(user_session)
 
 
 def update_session(
@@ -183,7 +183,7 @@ def update_session(
         user_session.state_id = next_state_id
         user_session.current_message_id = response_message_id
         user_session.current_text = tg_message.new_text
-        user_session_storage.update_user_session(user_session)
+        USER_SESSION_STORAGE.update_user_session(user_session)
 
 
 def go_home(
@@ -195,4 +195,9 @@ def go_home(
     data = current_node.get_message_data_for_lock_message(user_session, tg_message)
     if data is not None:
         t_utils.update_message(data)
-    user_session_storage.delete_session(user_session)
+    USER_SESSION_STORAGE.delete_session(user_session)
+
+
+USER_SESSION_STORAGE.create_table_if_not_exists()
+USER_FEEDBACK_STORAGE.create_table_if_not_exists()
+USER_REQUESTS_STORAGE.create_table_if_not_exists()

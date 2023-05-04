@@ -68,9 +68,8 @@ class UserSession:
 class UserSessionStorage:
     def __init__(self):
         self.dynamo_db = DynamoDb()
-        self.__create_table_if_not_exists()
 
-    def __create_table_if_not_exists(self):
+    def create_table_if_not_exists(self):
         try:
             dynamodb_client = self.dynamo_db.get_client()
             existing_tables = dynamodb_client.list_tables()['TableNames']
@@ -206,3 +205,6 @@ class UserSessionStorage:
                 exc_info=True
             )
             raise err
+
+
+USER_SESSION_STORAGE = UserSessionStorage()

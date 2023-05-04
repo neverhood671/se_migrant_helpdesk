@@ -1,16 +1,18 @@
+import logging
 import re
 from typing import Optional
 
 import telegram_utils as t_utils
 import topics_modelling as model
 import yaml
-from user_requests_storage import UserRequestsStorage
+from user_feedback_storage import USER_FEEDBACK_STORAGE
+from user_requests_storage import USER_REQUESTS_STORAGE
 from user_session_storage import UserSession
+
+logger = logging.getLogger(__name__)
 
 REPEAT_STATE_ID = 'REPEAT'
 HOME_STATE_ID = 'HOME'
-
-user_requests_storage = UserRequestsStorage()
 
 
 def apply_session_params(string: str, session: UserSession):
@@ -191,7 +193,7 @@ class CheckTopicPredictionNode(AbstractChatNode):
             message: t_utils.MessageAction,
             action_text: str
     ):
-        user_requests_storage.save_vote(
+        USER_REQUESTS_STORAGE.save_vote(
             chat_id=user_session.chat_id,
             response_message_id=user_session.current_message_id,
             vote=action_text
@@ -254,8 +256,19 @@ class FeedbackNode(AbstractChatNode):
             message: t_utils.MessageAction,
             action_text: str
     ):
-        # TODO:save user_session_result
-        return
+        topic = user_session.session_attributes.get('topic')
+        if topic is None:
+            logger.warning(
+                'Topic is None for session %s in chat %s',
+                user_session.session_id, message.chat_id
+            )
+        else:
+            USER_FEEDBACK_STORAGE.save_feedback(
+                chat_id=message.chat_id,
+                session_id=user_session.session_id,
+                topic_id=topic,
+                vote=action_text
+            )
 
     def _get_message_data_for_lock_message(
             self,
