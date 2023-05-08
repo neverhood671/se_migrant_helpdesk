@@ -13,10 +13,10 @@ head_topic_apartment:
   exit_node_content: "End session"
   exit_node_id: "feedback"
   options:
-    - content: "Yes"
-      next_node_id: "apartment_options"
-    - content: "No"
-      next_node_id: "feedback"
+    - - content: "Yes"
+        next_node_id: "apartment_options"
+      - content: "No"
+        next_node_id: "feedback"
 
 apartment_options:
   node_type: "SimpleOptionNode"
@@ -24,10 +24,10 @@ apartment_options:
   exit_node_content: "End session"
   exit_node_id: "feedback"
   options:
-    - content: "First-hand"
-      next_node_id: "apartment_first_hand"
-    - content: "Second-hand"
-      next_node_id: "apartment_second_hand"
+    - - content: "First-hand"
+        next_node_id: "apartment_first_hand"
+      - content: "Second-hand"
+        next_node_id: "apartment_second_hand"
 
 apartment_first_hand:
   node_type: "SimpleOptionNode"
@@ -45,8 +45,8 @@ apartment_first_hand:
   exit_node_content: "Back to apartment"
   exit_node_id: "apartment_options"
   links:
-    - content: "The main queues"
-      url: "https://habr.com/ru/all/"
+    - - content: "The main queues"
+        url: "https://habr.com/ru/all/"
 
 apartment_second_hand:
   node_type: "SimpleOptionNode"

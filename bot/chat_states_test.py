@@ -22,8 +22,9 @@ for k, v in states.ALL_STATES.items():
     elif isinstance(v, states.SimpleOptionNode):
         if v.exit_node_id is not None:
             assert v.exit_node_id in states.ALL_STATES.keys()
-        for o in v.options:
-            assert o['next_node_id'] in states.ALL_STATES.keys()
+        for row in v.options:
+            for o in row:
+                assert o['next_node_id'] in states.ALL_STATES.keys()
     elif isinstance(v, states.PostnumberKomvuxSearcherNode):
         if v.exit_node_id is not None:
             assert v.exit_node_id in states.ALL_STATES.keys()

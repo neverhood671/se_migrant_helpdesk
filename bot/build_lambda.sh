@@ -5,9 +5,9 @@ test -f se_migrant_help_bot.zip && rm se_migrant_help_bot.zip
 cp ../nlp/model.zip ./
 cp ../postnummer-kommune-collection/kommunes.json ./
 
-pip3 install --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: requests -t ./
-pip3 install --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: scikit-learn -t ./
-pip3 install --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: pyyaml -t ./
+pip3 install --upgrade --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: requests -t ./
+pip3 install --upgrade --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: scikit-learn -t ./
+pip3 install --upgrade --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: pyyaml -t ./
 find ./ -type f -name "*.so" | xargs -r strip
 find ./ -type f -name "*.pyc" | xargs -r rm
 find ./ -type d -name "__pycache__" | xargs -r rm -r

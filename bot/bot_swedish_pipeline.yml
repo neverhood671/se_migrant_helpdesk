@@ -4,12 +4,12 @@ head_topic_swedish:
   exit_node_content: "End session"
   exit_node_id: "feedback"
   options:
-    - content: "Can I study SFI?"
-      next_node_id: "sfi_perm_age"
-    - content: "What SFI level should I start with?"
-      next_node_id: "sfi_level"
-    - content: "How can I start SFI?"
-      next_node_id: "sfi_howto"
+    - - content: "Can I study SFI?"
+        next_node_id: "sfi_perm_age"
+    - - content: "What SFI level should I start with?"
+        next_node_id: "sfi_level"
+    - - content: "How can I start SFI?"
+        next_node_id: "sfi_howto"
 
 sfi_perm_age:
   node_type: "SimpleOptionNode"
@@ -17,10 +17,10 @@ sfi_perm_age:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_perm_personalnumber"
-    - content: "No"
-      next_node_id: "sfi_perm_no"
+    - - content: "Yes"
+        next_node_id: "sfi_perm_personalnumber"
+      - content: "No"
+        next_node_id: "sfi_perm_no"
 
 sfi_perm_personalnumber:
   node_type: "SimpleOptionNode"
@@ -28,10 +28,10 @@ sfi_perm_personalnumber:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_perm_levelb1"
-    - content: "No"
-      next_node_id: "sfi_perm_no"
+    - - content: "Yes"
+        next_node_id: "sfi_perm_levelb1"
+      - content: "No"
+        next_node_id: "sfi_perm_no"
 
 sfi_perm_levelb1:
   node_type: "SimpleOptionNode"
@@ -39,10 +39,10 @@ sfi_perm_levelb1:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_perm_yes"
-    - content: "No"
-      next_node_id: "sfi_perm_no"
+    - - content: "Yes"
+        next_node_id: "sfi_perm_yes"
+      - content: "No"
+        next_node_id: "sfi_perm_no"
 
 sfi_perm_yes:
   node_type: "SimpleOptionNode"
@@ -62,10 +62,10 @@ sfi_level:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_level_school8more"
-    - content: "No"
-      next_node_id: "sfi_level_a1"
+    - - content: "Yes"
+        next_node_id: "sfi_level_school8more"
+      - content: "No"
+        next_node_id: "sfi_level_a1"
 
 sfi_level_school8more:
   node_type: "SimpleOptionNode"
@@ -73,10 +73,10 @@ sfi_level_school8more:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_level_sfibefore"
-    - content: "No"
-      next_node_id: "sfi_level_b2"
+    - - content: "Yes"
+        next_node_id: "sfi_level_sfibefore"
+      - content: "No"
+        next_node_id: "sfi_level_b2"
 
 sfi_level_sfibefore:
   node_type: "SimpleOptionNode"
@@ -84,10 +84,10 @@ sfi_level_sfibefore:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_level_passc"
-    - content: "No"
-      next_node_id: "sfi_level_c3"
+    - - content: "Yes"
+        next_node_id: "sfi_level_passc"
+      - content: "No"
+        next_node_id: "sfi_level_c3"
 
 sfi_level_passc:
   node_type: "SimpleOptionNode"
@@ -95,10 +95,10 @@ sfi_level_passc:
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
-    - content: "Yes"
-      next_node_id: "sfi_level_d3"
-    - content: "No"
-      next_node_id: "sfi_level_c3j"
+    - - content: "Yes"
+        next_node_id: "sfi_level_d3"
+      - content: "No"
+        next_node_id: "sfi_level_c3j"
 
 sfi_level_a1:
   node_type: "SimpleOptionNode"

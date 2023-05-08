@@ -161,9 +161,13 @@ node_id:
   exit_node_content: "Text for special button [optional]"
   exit_node_id: "Id node for special button [optional]"
   links:  # optional
-    - content: "Text for link 1"
-      url: "url http://..."
+    - - content: "Text for link 1"
+        url: "url http://..."
   options:  # optional
-    - content: "Text for button 1"
-      next_node_id: "Id node for button 1"
+    - - content: "Text for button 1 row 1"
+        next_node_id: "Id node for button 1"
+      - content: "Text for button 2 row 1"
+        next_node_id: "Id node for button 2"
+    - - content: "Text for button 3 row 2"
+        next_node_id: "Id node for button 3"
 ```

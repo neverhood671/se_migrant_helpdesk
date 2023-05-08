@@ -398,17 +398,18 @@ class SimpleOptionNode(AbstractChatNode):
         self.exit_node_id = node_dict.get('exit_node_id')
         self.exit_node_content = node_dict.get('exit_node_content')
 
-        self.links = node_dict.get('links')
+        self.links: list[list[dict]] = node_dict.get('links')
         if self.links is None:
-            self.links: list[dict] = list()
+            self.links: list[list[dict]] = list()
 
-        self.options = node_dict.get('options')
+        self.options: list[list[dict]] = node_dict.get('options')
         self.options_by_node = dict()
         if self.options is None:
-            self.options: list[dict] = list()
+            self.options: list[list[dict]] = list()
         else:
-            for o in self.options:
-                self.options_by_node[o['content'].lower()] = o['next_node_id']
+            for row in self.options:
+                for o in row:
+                    self.options_by_node[o['content'].lower()] = o['next_node_id']
         if self.exit_node_id is not None:
             self.options_by_node['exit'] = self.exit_node_id
 
@@ -431,24 +432,32 @@ class SimpleOptionNode(AbstractChatNode):
             prefix: str = ""
     ) -> Optional[dict]:
         links = []
-        for l in self.links:
-            links.append(
-                {'text': l['content'], 'url': l['url']}
-            )
+        for row in self.links:
+            links_row = []
+            for l in row:
+                links_row.append(
+                    {'text': l['content'], 'url': l['url']}
+                )
+            if len(links_row) > 0:
+                links.append(links_row)
 
-        keyboard = []
-        for o in self.options:
-            keyboard.append(
-                {'text': o['content'], 'callback_data': o['next_node_id']}
-            )
+        keyboards = []
+        for row in self.options:
+            keyboard = []
+            for o in row:
+                keyboard.append(
+                    {'text': o['content'], 'callback_data': o['next_node_id']}
+                )
+            if len(keyboard) > 0:
+                keyboards.append(keyboard)
         if self.exit_node_id is not None:
-            keyboard.append({'text': self.exit_node_content, 'callback_data': self.exit_node_id})
+            keyboards.append([{'text': self.exit_node_content, 'callback_data': self.exit_node_id}])
 
         inline_keyboard = []
         if len(links) > 0:
-            inline_keyboard.append(links)
-        if len(keyboard) > 0:
-            inline_keyboard.append(keyboard)
+            inline_keyboard.extend(links)
+        if len(keyboards) > 0:
+            inline_keyboard.extend(keyboards)
         if len(inline_keyboard) == 0:
             inline_keyboard.append([])
 
@@ -466,16 +475,27 @@ class SimpleOptionNode(AbstractChatNode):
             action_text: str
     ) -> Optional[dict]:
         links = []
-        for l in self.links:
-            links.append(
-                {'text': l['content'], 'url': l['url']}
-            )
+        for row in self.links:
+            links_row = []
+            for l in row:
+                links_row.append(
+                    {'text': l['content'], 'url': l['url']}
+                )
+            if len(links_row) > 0:
+                links.append(links_row)
+        if len(links) == 0:
+            links.append([])
 
         response_text = user_session.current_text
+        break_out_flag = False
         if self.exit_node_id is not None and action_text != self.exit_node_id:
-            for o in self.options:
-                if action_text == o['next_node_id']:
-                    response_text += f'\n\nYour answer: {o["content"]}'
+            for row in self.options:
+                for o in row:
+                    if action_text == o['next_node_id']:
+                        response_text += f'\n\nYour answer: {o["content"]}'
+                        break_out_flag = True
+                        break
+                if break_out_flag:
                     break
 
         return {
@@ -483,7 +503,7 @@ class SimpleOptionNode(AbstractChatNode):
             'chat_id': user_session.chat_id,
             'message_id': user_session.current_message_id,
             'reply_markup': {
-                'inline_keyboard': [links]
+                'inline_keyboard': links
             }
         }
 
