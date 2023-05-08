@@ -1,4 +1,34 @@
 @startuml
 start
+    : prepare you documents;
+    if (Do you have Swedish ID card?) then (yes)
+        : Bring your ID card;
+        if (Do you have income in Sweden?) then (yes)
+           : Bring the documents that confirm your income, e.g. employment certificate or payslips;
+        else (no)
+           : then it could be tricky to open a bank account, but you can still try to do it!;
+        endif
+    else (no)
+        switch (What citizenship do you have?)
+            case ()
+                    group EU or EEA country
+                       : bring you national ID and an additional document, such as residence permit, employment contract, a salary statement or a financial overview or account statement from your current bank;
+                    end group
+            case ()
+                    group Ukraine
+                       : If you are from Ukraine and covered by the EU Temporary Protection Directive, you need to bring:
+                       - Your residence permit card from Migrationsverket (The Swedish Migration Agency).
+                       - A register extract from Skatteverket (The Swedish Tax Agency) showing coordination number and address.
+                       - Your passport;
+                    end group
+            case ()
+                    group non-EU/non-EEA/stateless
+                       : Don't forget your Swedish Residence permit card;
+                    end group
+        endswitch
+    endif
+    : visit one of the local banks branches;
+    : Some banks will create an account for you in the same day, others will ask you to wait for a couple of weeks or even monthes.
+    It is really hard to predict. Even inside the same bank and the same branch situation can be different in different days. We wish you luck!;
 stop
 @enduml

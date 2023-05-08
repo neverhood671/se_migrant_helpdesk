@@ -3,7 +3,6 @@ start
 : Topic is recognized - PN;
 if (Are you going to live in Sweden for 1 year or more?) then (yes)
     : fill in the [online form](https://app.skatteverket.se/fbfinv-anmalan-kund-web-fbffts-kund/valkomstsida);
-    : Find your nearest [tax agency office](https://skatteverket.se/omoss/kontaktaoss/besokservicekontor.4.515a6be615c637b9aa4acd5.html);
     : Prepare your documents
       - passport,
       - documents showing your civil status (e.g., marriage certificate),
@@ -20,7 +19,9 @@ if (Are you going to live in Sweden for 1 year or more?) then (yes)
                    : Don't forget your Swedish Residence permit card;
                 end group
     endswitch
-    : When the Swedish Tax Agency has registered you and your family, you will receive your personal identity numbers (personnummer);
+    : Find your nearest [tax agency office](https://skatteverket.se/omoss/kontaktaoss/besokservicekontor.4.515a6be615c637b9aa4acd5.html);
+    : Visit tax agency office with all the documents in person;
+    : When the Swedish Tax Agency has registered you and your family, you will receive your personal identity numbers by mail;
 else (no)
     : Sorry, you are not entitled to get PN;
 endif
