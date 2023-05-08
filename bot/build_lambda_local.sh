@@ -4,7 +4,7 @@ cp ../nlp/model.zip ./
 cp ../postnummer-kommune-collection/kommunes.json ./
 
 pip3 install --upgrade boto3 -t ./
-pip3 install --upgrade requests -t ./
+pip3 install --upgrade requests "urllib3<2" -t ./
 pip3 install --upgrade scikit-learn -t ./
 pip3 install --upgrade cPickle -t ./
 pip3 install --upgrade pyyaml -t ./
