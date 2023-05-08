@@ -13,7 +13,7 @@ while (Want more info about SFI?) is (yes)
             (Have you studied swedish before?) and
             (Is your level of Swedish better B1 or higher?) then (yes)
                 :Yes! You are entitled to study SFI;
-            else
+            else (no)
                 :No, unfortunately you can not study SFI;
             endif
         end group
@@ -27,13 +27,13 @@ while (Want more info about SFI?) is (yes)
                         else (no)
                             :You can join SFI course 3C;
                         endif
-                    else
+                    else (no)
                         :You can start SFI course 3C;
                     endif
                 else (no)
                     :You can start SFI course 2B;
                 endif
-            else
+            else (no)
                 :You can start SFI course 1A;
             endif
         end group
@@ -49,7 +49,7 @@ while (Want more info about SFI?) is (yes)
                 else (no)
                     :We only have you <kommun website link>. You can follow the link, find your kommun contacts and ask them about SFI;
                 endif
-            else
+            else (no)
                 :It does not look like swedish post number. Make sure to enter a correct one;
             endif
         end group

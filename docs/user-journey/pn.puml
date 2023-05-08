@@ -1,0 +1,28 @@
+@startuml
+start
+: Topic is recognized - PN;
+if (Are you going to live in Sweden for 1 year or more?) then (yes)
+    : fill in the [online form](https://app.skatteverket.se/fbfinv-anmalan-kund-web-fbffts-kund/valkomstsida);
+    : Find your nearest [tax agency office](https://skatteverket.se/omoss/kontaktaoss/besokservicekontor.4.515a6be615c637b9aa4acd5.html);
+    : Prepare your documents
+      - passport,
+      - documents showing your civil status (e.g., marriage certificate),
+      - birth certificate (if you have children);
+
+    switch (What citizenship do you have?)
+        case ()
+                group EU or EEA country
+                    : Don't forget documents that can confirm your plans to stay in Sweden long term.
+                    It can be employment certificate or a letter of admission from your university;
+                end group
+        case ()
+                group non-EU/non-EEA/stateless
+                   : Don't forget your Swedish Residence permit card;
+                end group
+    endswitch
+    : When the Swedish Tax Agency has registered you and your family, you will receive your personal identity numbers (personnummer);
+else (no)
+    : Sorry, you are not entitled to get PN;
+endif
+stop
+@enduml
