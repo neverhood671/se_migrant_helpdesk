@@ -5,6 +5,7 @@ from typing import Optional
 import telegram_utils as t_utils
 import topics_modelling as model
 import yaml
+from postnummer_komun_provider import POSTNUMMER_KOMUN_PROVIDER
 from user_feedback_storage import USER_FEEDBACK_STORAGE
 from user_requests_storage import USER_REQUESTS_STORAGE
 from user_session_storage import UserSession
@@ -557,17 +558,19 @@ class PostnumberKomvuxSearcherNode(AbstractChatNode):
         if self.exit_node_id is not None and action_text == self.exit_node_id:
             return self.exit_node_id
 
-        # TODO: add postnum recognition
         user_session.session_attributes["postnumer"] = action_text
-        if action_text == '11111':
+        kommun = POSTNUMMER_KOMUN_PROVIDER.get_kommun_info_by_number(action_text)
+        if kommun is None:
             return self.unknown_postnumer_node_id
-        elif action_text == '22222':
-            user_session.session_attributes["komvux_link"] = "http://komvux_link"
-            user_session.session_attributes["kommun_link"] = "http://kommun_link"
-            return self.komvux_exists_node_id
-        else:
-            user_session.session_attributes["kommun_link"] = "http://kommun_link"
+        elif kommun.vuxenutbildningar_link is None:
+            user_session.session_attributes["kommun_name"] = kommun.name
+            user_session.session_attributes["kommun_link"] = kommun.kommun_link
             return self.komvux_doesnt_exists_node_id
+        else:
+            user_session.session_attributes["kommun_name"] = kommun.name
+            user_session.session_attributes["kommun_link"] = kommun.kommun_link
+            user_session.session_attributes["komvux_link"] = kommun.vuxenutbildningar_link
+            return self.komvux_exists_node_id
 
 
 ALL_STATES = {}

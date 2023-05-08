@@ -1,5 +1,8 @@
 test -f model.zip && rm model.zip
+test -f kommunes.json && rm kommunes.json
 test -f se_migrant_help_bot.zip && rm se_migrant_help_bot.zip
+
+cp ../postnummer-kommune-collection/kommunes.json ./
 
 pip3 install --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: requests -t ./
 pip3 install --platform manylinux2014_x86_64 --python 3.9 --only-binary=:all: pyyaml -t ./
@@ -16,3 +19,5 @@ zip -r se_migrant_help_bot.zip ./ -x "README.md" -x ".idea/**" -x "*.iml" -x "se
 
 mv topics_modelling.py topics_modelling_light.py
 mv topics_modelling_heavy.py topics_modelling.py
+
+test -f kommunes.json && rm kommunes.json

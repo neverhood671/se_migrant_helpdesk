@@ -1,5 +1,7 @@
 test -f model.zip && rm model.zip
+test -f kommunes.json && rm kommunes.json
 cp ../nlp/model.zip ./
+cp ../postnummer-kommune-collection/kommunes.json ./
 
 pip3 install boto3 -t ./
 pip3 install requests -t ./

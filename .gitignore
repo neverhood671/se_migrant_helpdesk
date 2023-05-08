@@ -3,13 +3,14 @@ venv
 
 /bot/*/**
 /bot/*.zip
+/bot/kommunes.json
 /bot/model_kmeans
 /bot/model_vectorizer
 /bot/six.py
 /bot/threadpoolctl.py
 
 /postnummer-kommune-collection/*/**
-/postnummer-kommune-collection/*.json
+/postnummer-kommune-collection/*_pretty.json
 
 *.iml
 *.ipr

@@ -1,12 +1,16 @@
 import json
 import os
+import re
 from html.parser import HTMLParser
 from random import randint
 from time import sleep
+from typing import Optional
 
 import requests
 
 POSTNUMMER_KOMMUNE_FILE = 'postnummer_kommune.json'
+KOMMUNER_LINKS_FILE = 'kommunerlista.json'
+KOMMUNER_VUXENUTBILDNINGAR_FILE = 'lankar-till-vuxenutbildningar-i-sveriges-kommuner.json'
 
 ALL_LAN_WORLDPOSTALCODES_LINKS = [
     "https://www.worldpostalcodes.org/l1/se/se/sverige/lista/r1/lista-over-postnummer-i-blekinge-lan",
@@ -34,9 +38,9 @@ ALL_LAN_WORLDPOSTALCODES_LINKS = [
 
 
 class PostnummerKommunePair:
-    def __init__(self, postnummer, kommune):
-        self.postnummer = postnummer
-        self.kommune = kommune
+    def __init__(self, postnummer: str, kommune: str):
+        self.postnummer: str = postnummer
+        self.kommune: str = kommune
 
     def to_dict(self):
         return {
@@ -44,12 +48,54 @@ class PostnummerKommunePair:
             'kommune': self.kommune
         }
 
+    def get_formatted_kommun(self):
+        if self.kommune == 'Falu kommun':
+            return 'Falun'
+        elif self.kommune == 'Göteborgs Stad':
+            return 'Göteborg'
+        else:
+            formatted_kommune = re.sub(r's? kommun', '', self.kommune)
+            if formatted_kommune in [
+                'Hagfor', 'Tranå', 'Alingså', 'Vännä', 'Storfor', 'Torså', 'Sotenä', 'Borå', 'Munkfor', 'Västerå',
+                'Göteborgs Stad', 'Strängnä', 'Bollnä', 'Hällefor', 'Kramfor', 'Degerfor', 'Höganä', 'Hofor', 'Grum',
+                'Robertsfor', 'Bengtsfor', 'Mönsterå'
+            ]:
+                return formatted_kommune + 's'
+            else:
+                return formatted_kommune
+
     @staticmethod
     def from_json(json_dict):
         return PostnummerKommunePair(
             postnummer=json_dict['postnummer'],
-            kommune=json_dict['kommune']
+            kommune=json_dict['kommune'],
         )
+
+
+class KommuneInfo:
+    def __init__(
+            self,
+            name: str,
+            kommun_link: str,
+            vuxenutbildningar_link: Optional[str],
+            postnummers: list[str]
+    ):
+        if name is None:
+            raise Exception('Kommun is none')
+        if kommun_link is None:
+            raise Exception(f'Kommun link is none for Kommun {name}')
+        self.name = name
+        self.kommun_link = kommun_link
+        self.vuxenutbildningar_link = vuxenutbildningar_link
+        self.postnummers = postnummers
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'kommun_link': self.kommun_link,
+            'vuxenutbildningar_link': self.vuxenutbildningar_link,
+            'postnummers': self.postnummers,
+        }
 
 
 class PostnummerCommuneParser(HTMLParser):
@@ -95,11 +141,41 @@ def to_json_list(postnummer_kommunes: list[PostnummerKommunePair]):
     return list(map(lambda t: t.to_dict(), postnummer_kommunes))
 
 
-def to_json_dict(postnummer_kommunes: list[PostnummerKommunePair]):
+def to_json_dict_num_kommun(postnummer_kommunes: list[PostnummerKommunePair]):
     json_dict = dict()
     for pair in postnummer_kommunes:
         json_dict[pair.postnummer] = pair.kommune
     return json_dict
+
+
+def collect_kommune_infos(
+        postnummer_kommunes: list[PostnummerKommunePair],
+        kommuner_links: dict[str, str],
+        kommunes_vuxenutbildningar: dict[str, str]
+):
+    kommune_infos = list()
+    kommune_infos_dict = dict()
+    for pk in postnummer_kommunes:
+        kommune_name = pk.get_formatted_kommun()
+        kommune = kommune_infos_dict.get(kommune_name)
+        if kommune is None:
+            kommune = KommuneInfo(
+                name=kommune_name,
+                kommun_link=kommuner_links.get(kommune_name),
+                vuxenutbildningar_link=kommunes_vuxenutbildningar.get(kommune_name),
+                postnummers=list()
+            )
+            kommune_infos.append(kommune)
+            kommune_infos_dict[kommune_name] = kommune
+        kommune.postnummers.append(pk.postnummer)
+    return kommune_infos
+
+
+def to_json_kommun_list(kommune_infos: list[KommuneInfo]):
+    json_list = list()
+    for kommun in kommune_infos:
+        json_list.append(kommun.to_dict())
+    return json_list
 
 
 def read_and_save_from_worldpostalcodes():
@@ -129,7 +205,34 @@ def save_to_file(file_name: str, data: str):
 if not os.path.isfile(POSTNUMMER_KOMMUNE_FILE):
     read_and_save_from_worldpostalcodes()
 
-postnummer_kommunes = load_from_file()
+postnummer_kommunes: list[PostnummerKommunePair] = load_from_file()
+
+kommuner_links = dict()
+with open(KOMMUNER_LINKS_FILE, 'r') as f:
+    kommuner_links: dict[str, str] = json.load(f)
+
+kommunes_vuxenutbildningar = dict()
+with open(KOMMUNER_VUXENUTBILDNINGAR_FILE, 'r') as f:
+    kommunes_vuxenutbildningar: dict[str, str] = json.load(f)
+
+# check kommunes_vuxenutbildningar
+undefined_kommun = set()
+for k in kommunes_vuxenutbildningar.keys():
+    if k not in kommuner_links.keys():
+        undefined_kommun.add(k)
+
+if len(undefined_kommun) > 0:
+    raise Exception(f'Undefined kommun in kommunes_vuxenutbildningar: {undefined_kommun}')
+
+# check postnummer_kommunes
+undefined_kommun = set()
+for pk in postnummer_kommunes:
+    k = pk.get_formatted_kommun()
+    if k not in kommuner_links.keys():
+        undefined_kommun.add(k)
+
+if len(undefined_kommun) > 0:
+    raise Exception(f'Undefined kommun in postnummer_kommunes: {undefined_kommun}')
 
 json_list = to_json_list(postnummer_kommunes)
 save_to_file(
@@ -137,12 +240,17 @@ save_to_file(
     json.dumps(json_list, indent=2, sort_keys=True, default=str)
 )
 
-json_dict = to_json_dict(postnummer_kommunes)
+kommune_infos = collect_kommune_infos(
+    postnummer_kommunes=postnummer_kommunes,
+    kommuner_links=kommuner_links,
+    kommunes_vuxenutbildningar=kommunes_vuxenutbildningar
+)
+json_list = to_json_kommun_list(kommune_infos)
 save_to_file(
-    'postnummer_kommune_dict.json',
-    json.dumps(json_dict, sort_keys=True, default=str)
+    'kommunes.json',
+    json.dumps(json_list, sort_keys=True, default=str)
 )
 save_to_file(
-    'postnummer_kommune_dict_pretty.json',
-    json.dumps(json_dict, indent=2, sort_keys=True, default=str)
+    'kommunes_pretty.json',
+    json.dumps(json_list, indent=2, sort_keys=True, default=str)
 )
