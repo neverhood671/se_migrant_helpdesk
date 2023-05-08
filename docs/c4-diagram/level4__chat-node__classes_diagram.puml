@@ -1,0 +1,108 @@
+@startuml classes
+set namespaceSeparator none
+class "AbstractChatNode" as bot.chat_states.AbstractChatNode {
+  node_id : str
+  close_node(user_session: UserSession, message: t_utils.MessageAction)
+  {abstract}get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+  get_message_data_for_lock_message(user_session: UserSession, message: t_utils.MessageAction) -> Optional[dict]
+  get_next_state(user_session: UserSession, message: t_utils.MessageAction) -> str
+}
+class "CheckTopicPredictionNode" as bot.chat_states.CheckTopicPredictionNode {
+  EXPECTED_ACTIONS : set
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "DynamoDb" as bot.dynamo_db_provider.DynamoDb {
+  client
+  get_client() -> BaseClient
+}
+class "FeedbackNode" as bot.chat_states.FeedbackNode {
+  EXPECTED_ACTIONS : set
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "KommuneInfo" as bot.postnummer_komun_provider.KommuneInfo {
+  kommun_link : str
+  name : str
+  postnummers : list[str]
+  vuxenutbildningar_link : Optional[str]
+  from_json(json_dict)
+}
+class "MakeTopicPredictionNode" as bot.chat_states.MakeTopicPredictionNode {
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "MessageAction" as bot.telegram_utils.MessageAction {
+  action_type : str
+  chat_id : int
+  first_name : str
+  new_message_id : Optional[int]
+  new_text : str
+}
+class "PostnumberKomvuxSearcherNode" as bot.chat_states.PostnumberKomvuxSearcherNode {
+  content
+  exit_node_content
+  exit_node_id
+  komvux_doesnt_exists_node_id
+  komvux_exists_node_id
+  unknown_postnumer_node_id
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "PostnummerKomunProvider" as bot.postnummer_komun_provider.PostnummerKomunProvider {
+  kommunes_ny_name : dict[str, KommuneInfo]
+  ponstnum_by_kommun : dict[str, KommuneInfo]
+  get_kommun_info_by_number(postnum: str) -> Optional[KommuneInfo]
+}
+class "SelectTopicNode" as bot.chat_states.SelectTopicNode {
+  EXPECTED_ACTIONS : set
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "SimpleOptionNode" as bot.chat_states.SimpleOptionNode {
+  content
+  exit_node_content
+  exit_node_id
+  links : list[dict]
+  options : list[dict]
+  options_by_node : dict
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "StaticTopicNode" as bot.chat_states.StaticTopicNode {
+  get_message_data(user_session: UserSession, message: t_utils.MessageAction, prefix: str) -> Optional[dict]
+}
+class "UserFeedbackStorage" as bot.user_feedback_storage.UserFeedbackStorage {
+  dynamo_db
+  create_table_if_not_exists()
+  save_feedback(chat_id: str, session_id: str, topic_id: str, vote: str)
+}
+class "UserRequestsStorage" as bot.user_requests_storage.UserRequestsStorage {
+  dynamo_db
+  create_table_if_not_exists()
+  save_question(chat_id, question_message_id, question, response_message_id, answer)
+  save_vote(chat_id, response_message_id, vote)
+}
+class "UserSession" as bot.user_session_storage.UserSession {
+  chat_id : str
+  current_message_id : int
+  current_text : str
+  session_attributes : Optional[dict]
+  session_id : Optional[str]
+  state_id : str
+  get_key_item()
+  get_session_attribute_values()
+  get_update_attribute_values()
+  to_item()
+}
+class "UserSessionStorage" as bot.user_session_storage.UserSessionStorage {
+  dynamo_db
+  create_new_session(chat_id: str, state_id: str, current_message_id: Optional[int], current_text: str)
+  create_table_if_not_exists()
+  delete_session(user_session: UserSession)
+  get_session(chat_id: str) -> Optional[UserSession]
+  save_new_session(new_session: UserSession)
+  update_user_session(user_session: UserSession)
+}
+bot.chat_states.CheckTopicPredictionNode -up-|> bot.chat_states.AbstractChatNode
+bot.chat_states.FeedbackNode -up-|> bot.chat_states.AbstractChatNode
+bot.chat_states.MakeTopicPredictionNode -up-|> bot.chat_states.AbstractChatNode
+bot.chat_states.PostnumberKomvuxSearcherNode -right|> bot.chat_states.AbstractChatNode
+bot.chat_states.SelectTopicNode -left|> bot.chat_states.AbstractChatNode
+bot.chat_states.SimpleOptionNode --|> bot.chat_states.AbstractChatNode
+bot.chat_states.StaticTopicNode --|> bot.chat_states.AbstractChatNode
+@enduml

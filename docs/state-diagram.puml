@@ -1,7 +1,5 @@
 @startuml
 
-
-
 home: Bot tries to recognize msg topic
 help: Bot provides info about itself
 feedback: Bot asks for feedback
@@ -13,7 +11,7 @@ state topic_confirmed {
   bank: open a bank account
   apartment: get an apartment
   swedish: start SFI
-  culture: join local comunities
+  culture: join local communities
 }
 
 [*] --> home
