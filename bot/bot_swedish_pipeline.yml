@@ -24,18 +24,29 @@ sfi_perm_age:
 
 sfi_perm_personalnumber:
   node_type: "SimpleOptionNode"
-  content: "Have you studied swedish before?"
+  content: "Do you have a personal number?"
+  exit_node_content: "Back to SFI"
+  exit_node_id: "head_topic_swedish"
+  options:
+    - - content: "Yes"
+        next_node_id: "sfi_level_swedishbefore"
+      - content: "No"
+        next_node_id: "sfi_perm_no"
+
+sfi_level_swedishbefore:
+  node_type: "SimpleOptionNode"
+  content: "Have you studied Swedish before?"
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:
     - - content: "Yes"
         next_node_id: "sfi_perm_levelb1"
       - content: "No"
-        next_node_id: "sfi_perm_no"
+        next_node_id: "sfi_perm_yes"
 
 sfi_perm_levelb1:
   node_type: "SimpleOptionNode"
-  content: "Is your level of Swedish better B1 or higher?"
+  content: "Is your level of Swedish lower than B1?"
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   options:

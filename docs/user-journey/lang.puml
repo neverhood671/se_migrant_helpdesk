@@ -8,11 +8,16 @@ while (Want more info about SFI?) is (yes)
     switch (What do you want?)
     case ()
         group Can I study SFI?
-            if ((Are you older than 16?) and
-            (Do you have a personal number?) and
-            (Have you studied swedish before?) and
-            (Is your level of Swedish better B1 or higher?) then (yes)
-                :Yes! You are entitled to study SFI;
+            if ((Are you older than 16?) and (Do you have a personal number?) then (yes)
+                    if (Have you studied swedish before?) then (yes)
+                        if (Is your level of Swedish lower than B1?) then (yes)
+                            :Yes! You are entitled to study SFI;
+                        else (no)
+                            :No, unfortunately you can not study SFI;
+                        endif
+                    else (no)
+                       :Yes! You are entitled to study SFI;
+                    endif
             else (no)
                 :No, unfortunately you can not study SFI;
             endif
@@ -57,4 +62,3 @@ while (Want more info about SFI?) is (yes)
 endwhile (no)
 stop
 @enduml
-
