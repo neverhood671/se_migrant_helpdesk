@@ -11,7 +11,7 @@ while (Want more info about SFI?) is (yes)
             if ((Are you older than 16?) and
             (Do you have a personal number?) and
             (Have you studied swedish before?) and
-            (Is your level of Swedish better B1 or higher?) then (yes)
+            (Is your level of Swedish lower than B1?) then (yes)
                 :Yes! You are entitled to study SFI;
             else (no)
                 :No, unfortunately you can not study SFI;
