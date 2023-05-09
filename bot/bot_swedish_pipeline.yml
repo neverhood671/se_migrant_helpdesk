@@ -133,7 +133,7 @@ sfi_level_d3:
 sfi_howto:
   node_type: "PostnumberKomvuxSearcherNode"
   content: "You need to apply through you municipality (kommun) adult education office (komvux). Most of them have online application forms.
-  Enter you <post number> to get more info"
+  Enter you post number (6 digits, e.g. 18362) to get more info"
   exit_node_content: "Back to SFI"
   exit_node_id: "head_topic_swedish"
   unknown_postnumer_node_id: "sfi_howto_unknown_postnumer"
@@ -148,7 +148,7 @@ sfi_howto_unknown_postnumer:
 
 sfi_howto_komvux_exists:
   node_type: "SimpleOptionNode"
-  content: "Visit you komvux website <komvux_link>"
+  content: "Visit you komvux website <komvux_link> to apply online or contact the local adult education office and ask more questions"
   exit_node_content: "Ok"
   exit_node_id: "head_topic_swedish"
 
