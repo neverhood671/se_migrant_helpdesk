@@ -1,5 +1,97 @@
 head_topic_pn:
   node_type: "SimpleOptionNode"
-  content: "Coming soon..."
+  content: "Are you going to live in Sweden for 1 year or longer?"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - - content: "Yes"
+        next_node_id: "pn_online_form"
+      - content: "No"
+        next_node_id: "pn_fail"
+
+
+pn_fail:
+  node_type: "SimpleOptionNode"
+  content: "Sorry, you are not entitled to get a PN"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+
+
+pn_online_form:
+  node_type: "SimpleOptionNode"
+  content: "Fill in this online form"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  links:
+    - - content: "Online form"
+        url: "https://app.skatteverket.se/fbfinv-anmalan-kund-web-fbffts-kund/valkomstsida"
+  options:
+    - - content: "Done"
+        next_node_id: "pn_docs"
+
+pn_docs:
+  node_type: "SimpleOptionNode"
+  content: "Prepare your documents:
+     \n
+     \n - passport,
+     \n - documents showing your civil status (e.g., marriage certificate),
+     \n - birth certificate (if you have children)"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - - content: "Done"
+        next_node_id: "pn_citizenship"
+
+
+pn_citizenship:
+  node_type: "SimpleOptionNode"
+  content: "What citizenship do you have?"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - - content: "EU or EEA country"
+        next_node_id: "pn_eu_docs"
+    - - content: "Other non-EU/non-EEA or stateless"
+        next_node_id: "pn_other_land_docs"
+
+
+pn_other_land_docs:
+  node_type: "SimpleOptionNode"
+  content: "Don't forget your Swedish Residence permit card"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - - content: "Ok"
+        next_node_id: "pn_office"
+
+pn_eu_docs:
+  node_type: "SimpleOptionNode"
+  content: "Don't forget to prepare documents that can confirm your plans to stay in Sweden long term.
+            It can be employment certificate or a letter of admission from your university"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  options:
+    - - content: "Ok"
+        next_node_id: "pn_office"
+
+
+pn_office:
+  node_type: "SimpleOptionNode"
+  content: "Find your nearest tax agency office"
+  exit_node_content: "End session"
+  exit_node_id: "feedback"
+  links:
+    - - content: "tax agency offices"
+        url: "https://app.skatteverket.se/fbfinv-anmalan-kund-web-fbffts-kund/valkomstsida"
+  options:
+    - - content: "Done"
+        next_node_id: "pn_visit"
+
+
+pn_visit:
+  node_type: "SimpleOptionNode"
+  content: "Visit tax agency office with all the documents in person.
+    \n
+    \nWhen the Swedish Tax Agency has registered you and your family, you will receive your personal identity numbers by mail"
   exit_node_content: "End session"
   exit_node_id: "feedback"

@@ -17,28 +17,34 @@ bank_citizenship:
   options:
     - - content: "EU or EEA country"
         next_node_id: "bank_eu_docs"
-      - content: "Ukraine"
+    - - content: "Ukraine"
         next_node_id: "bank_ukraine_docs"
-      - content: "other non-EU/non-EEA or stateless"
+    - - content: "Other non-EU/non-EEA or stateless"
         next_node_id: "bank_other_land_docs"
 
 bank_eu_docs:
   node_type: "SimpleOptionNode"
-  content: "Bring you national ID and an additional document, such as residence permit, employment contract, a salary statement or a financial overview or account statement from your current bank"
-  next_node_id: "bank_visit"
-
-bank_ukraine_docs:
-  node_type: "SimpleOptionNode"
-  content: "Bring your Swedish Residence permit card"
-  next_node_id: "bank_visit"
+  content: "Prepare you national ID and an additional document, such as residence permit, employment contract, a salary statement or a financial overview or account statement from your current bank"
+  options:
+    - - content: "Done"
+        next_node_id: "bank_visit"
 
 bank_other_land_docs:
   node_type: "SimpleOptionNode"
-  content: "If you are from Ukraine and covered by the EU Temporary Protection Directive, you need to bring:
+  content: "Prepare your Swedish Residence permit card"
+  options:
+    - - content: "Done"
+        next_node_id: "bank_visit"
+
+bank_ukraine_docs:
+  node_type: "SimpleOptionNode"
+  content: "If you are from Ukraine and covered by the EU Temporary Protection Directive, you need to prepare:
               \n - Your residence permit card from Migrationsverket (The Swedish Migration Agency).
               \n - A register extract from Skatteverket (The Swedish Tax Agency) showing coordination number and address.
               \n - Your passport."
-  next_node_id: "bank_visit"
+  options:
+    - - content: "Done"
+        next_node_id: "bank_visit"
 
 
 bank_income:
@@ -50,23 +56,25 @@ bank_income:
     - - content: "Yes"
         next_node_id: "bank_visit"
       - content: "No"
-        next_node_id: "bank_fail"
+        next_node_id: "bank_low_chance"
+
+bank_low_chance:
+  node_type: "SimpleOptionNode"
+  content: "Then it could be tricky to open a bank account, but you can still try to do it!"
+  options:
+    - - content: "Ok"
+        next_node_id: "bank_visit"
 
 bank_visit:
   node_type: "SimpleOptionNode"
-  content: "Visit one of the local banks branches. 
-  \n Some banks will create an account for you in the same day, others will ask you to wait for a couple of weeks or even months.
-    It is really hard to predict. Even inside the same bank and the same branch situation can be different in different days. We wish you luck!"
-  exit_node_content: "End session"
-  exit_node_id: "feedback"
-
-bank_fail:
-  node_type: "SimpleOptionNode"
-  content: "Then it could be tricky to open a bank account, but you can still try to do it! 
+  content: "Visit one of the local banks branches.
      \n
-     \n Visit one of the local banks branches, take all the documents you have that can confirm that: 
-     \n 1. you are going to stay in Sweden for 1 year or more (e.g. employment contract, documents from the university you study in, etc.)
-     \n 2. have stable income (e.g. payslips, parental allowance documents, unemployment benefits, etc.)
-     \n 3. you are who you say you are (ideally Swedish ID, if you don't have Swedish ID bring you national passport and someone, e.g. you partner or boss, who has Swedish ID and can confirm your identity)"
+     \nTake all the documents you have that can confirm that: 
+     \n 1. you are going to stay in Sweden long-term
+     \n 2. you have stable income 
+     \n 3. you are who you say you are (ideally Swedish ID card, but you can also try with your national passport)
+     \n
+     \nIf you lack some of the documents the chance of rejection is high. But even if you have all the docs some banks will create an account for you in the same day, others will ask you to wait for weeks or even months.
+     It is really hard to predict. Even inside the same bank and the same branch situation can be different in different days. So do not give up, try again in case of rejection. We wish you luck!"
   exit_node_content: "End session"
   exit_node_id: "feedback"

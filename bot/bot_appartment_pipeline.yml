@@ -3,13 +3,13 @@ head_topic_apartment:
   content: "Get started on finding a home as soon as possible,
   especially if you’ll be living in a big city like
   Stockholm, Gothenburg or Malmö.
-  You can rent ‘first-hand’ or ‘second-hand’ in Sweden.
+  You can rent first-hand or second-hand in Sweden.
   First-hand (första hand) means you sign an agreement
   with the owner of the building, while second-hand
   (andra hand) means you sign an agreement with someone
   who owns the flat or has the first-hand contract on the flat.
   \n
-  \n Want more info about housing in Sweden?"
+  \nWant more info about housing in Sweden?"
   exit_node_content: "End session"
   exit_node_id: "feedback"
   options:
@@ -50,14 +50,14 @@ apartment_first_hand:
 
 apartment_second_hand:
   node_type: "SimpleOptionNode"
-  content: "For second-hand contracts, there are many dedicated accomodation
+  content: "For second-hand contracts, there are many dedicated accommodation
         websites. Most ads are in Swedish, but you will find some in English too.
         \n - blocket.se
         \n - qasa.se
         \n - samtrygg.se
         \n - beresident.se;
         \n
-        \nWrite an outstanding rental application
+        \nTo increase you chanses to get an apartment write an outstanding rental application.
         \nIntroduce yourself properly. Start by introducing yourself and make sure to mention:
         \n - Name, age, occupation
         \n - Mention why you are moving to Sweden (for work, study, etc.).
