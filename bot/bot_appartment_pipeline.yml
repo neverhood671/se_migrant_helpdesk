@@ -46,7 +46,7 @@ apartment_first_hand:
   exit_node_id: "apartment_options"
   links:
     - - content: "The main queues"
-        url: "https://habr.com/ru/all/"
+        url: "https://www.hyresgastforeningen.se/stod-och-rad/flytta/bostadsko/?gclid=CjwKCAjwxr2iBhBJEiwAdXECw9vVIcfXWcac2nOUK2Zz4XccUM1e3YHHmLoFot63iJFMUVv4c_w39hoCfVMQAvD_BwE"
 
 apartment_second_hand:
   node_type: "SimpleOptionNode"
