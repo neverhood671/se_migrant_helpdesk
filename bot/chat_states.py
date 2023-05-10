@@ -125,6 +125,8 @@ class StaticTopicNode(AbstractChatNode):
             message: t_utils.MessageAction,
             action_text: str
     ) -> str:
+        user_session.session_attributes['wellcome_text'] = \
+            'Hi! I can provide you with information about the following topics'
         return 'select_topic'
 
 
@@ -188,7 +190,9 @@ class SelectTopicNode(AbstractChatNode):
             message: t_utils.MessageAction,
             prefix: str = ""
     ) -> Optional[dict]:
-        response_text = 'Choose the option you want to talk about'
+        response_text = user_session.session_attributes.get('wellcome_text')
+        if response_text is None:
+            response_text = 'Choose the option you want to talk about'
         return {
             'text': response_text.encode('utf8'),
             'chat_id': message.chat_id,
