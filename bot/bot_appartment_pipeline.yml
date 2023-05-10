@@ -8,8 +8,8 @@ head_topic_apartment:
   with the owner of the building, while second-hand
   (andra hand) means you sign an agreement with someone
   who owns the flat or has the first-hand contract on the flat.
-  
-  Want more info about housing in Sweden?"
+  \n
+  \n Want more info about housing in Sweden?"
   exit_node_content: "End session"
   exit_node_id: "feedback"
   options:
