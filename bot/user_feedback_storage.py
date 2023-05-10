@@ -20,8 +20,14 @@ class UserFeedbackStorage:
             if USER_FEEDBACKS_TABLE not in existing_tables:
                 dynamodb_client.create_table(
                     TableName=USER_FEEDBACKS_TABLE,
-                    KeySchema=[{'AttributeName': 'chat_id', 'KeyType': 'HASH'}],
-                    AttributeDefinitions=[{'AttributeName': 'chat_id', 'AttributeType': 'S'}],
+                    KeySchema=[
+                        {'AttributeName': 'session_id', 'KeyType': 'HASH'}, # Partition key
+                        {'AttributeName': 'chat_id', 'KeyType': 'RANGE'}, # Sort key
+                    ],
+                    AttributeDefinitions=[
+                        {'AttributeName': 'session_id', 'AttributeType': 'S'},
+                        {'AttributeName': 'chat_id', 'AttributeType': 'S'},
+                    ],
                     ProvisionedThroughput={'ReadCapacityUnits': 10, 'WriteCapacityUnits': 10})
                 table = dynamodb_client.describe_table(TableName=USER_FEEDBACKS_TABLE)
                 table.wait_until_exists()
@@ -38,8 +44,8 @@ class UserFeedbackStorage:
             self.dynamo_db.get_client().put_item(
                 TableName=USER_FEEDBACKS_TABLE,
                 Item={
-                    "chat_id": {'S': str(chat_id)},
                     "session_id": {'S': session_id},
+                    "chat_id": {'S': str(chat_id)},
                     "topic_id": {'S': topic_id},
                     "vote": {'S': vote}
                 }
