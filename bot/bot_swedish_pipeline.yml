@@ -29,11 +29,11 @@ sfi_perm_personalnumber:
   exit_node_id: "head_topic_swedish"
   options:
     - - content: "Yes"
-        next_node_id: "sfi_level_swedishbefore"
+        next_node_id: "sfi_perm_swedishbefore"
       - content: "No"
         next_node_id: "sfi_perm_no"
 
-sfi_level_swedishbefore:
+sfi_perm_swedishbefore:
   node_type: "SimpleOptionNode"
   content: "Have you studied Swedish before?"
   exit_node_content: "Back to SFI"
