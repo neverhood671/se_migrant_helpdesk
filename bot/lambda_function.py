@@ -9,7 +9,7 @@ from user_session_storage import USER_SESSION_STORAGE, UserSession
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_MESSAGES = {'/help', '/start', '/reset'}
+SYSTEM_MESSAGES = {'/reset'}
 # INIT_STATE_ID = 'make_topic_prediction'
 INIT_STATE_ID = 'static_topic'
 

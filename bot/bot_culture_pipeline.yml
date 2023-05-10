@@ -1,5 +1,17 @@
 head_topic_culture:
   node_type: "SimpleOptionNode"
-  content: "Coming soon..."
+  content: "Culture shock is a normal and common experience for many people who move to a new place with a different culture, language, and customs. Here are some tips that can help you overcome culture shock:
+    \n
+    \n- Make connections: Try to meet new people and make friends with locals. This will help you learn more about the culture and also give you a support network.
+    \n
+    \n- Stay connected to home: Keep in touch with friends and family back home, but also try to immerse yourself in your new environment.
+    \n
+    \n- Learn the language: If you're moving to a place where the language is different, make an effort to learn some of the basic words and phrases. This will make it easier for you to communicate with locals and understand their customs.
+    
+    Remember that culture shock is a natural part of the process of adapting to a new culture. With time and effort, you can overcome culture shock and begin to feel at home in your new location.;
+    "
+  options:
+    - - content: "How to learn Swedish in Sweden?"
+        next_node_id: "head_topic_swedish"
   exit_node_content: "End session"
   exit_node_id: "feedback"
