@@ -198,11 +198,11 @@ class SelectTopicNode(AbstractChatNode):
             'chat_id': message.chat_id,
             'reply_markup': {
                 'inline_keyboard': [
-                    [{'text': 'Swedish: SFI', 'callback_data': 'swedish'}],
-                    [{'text': 'Bank', 'callback_data': 'bank'}],
-                    [{'text': 'Personal number', 'callback_data': 'pn'}],
-                    [{'text': 'Apartment', 'callback_data': 'apartment'}],
-                    [{'text': 'Culture', 'callback_data': 'culture'}],
+                    [{'text': 'Learn Swedish in Sweden', 'callback_data': 'swedish'}],
+                    [{'text': 'Open a bank account', 'callback_data': 'bank'}],
+                    [{'text': 'Get a personal number', 'callback_data': 'pn'}],
+                    [{'text': 'Find an apartment', 'callback_data': 'apartment'}],
+                    [{'text': 'Overcome culture shock', 'callback_data': 'culture'}],
                 ]
             }
         }

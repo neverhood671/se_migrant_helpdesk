@@ -82,7 +82,7 @@ pn_office:
   exit_node_id: "feedback"
   links:
     - - content: "tax agency offices"
-        url: "https://app.skatteverket.se/fbfinv-anmalan-kund-web-fbffts-kund/valkomstsida"
+        url: "https://skatteverket.se/omoss/kontaktaoss/besokservicekontor.4.515a6be615c637b9aa4acd5.html"
   options:
     - - content: "Done"
         next_node_id: "pn_visit"
