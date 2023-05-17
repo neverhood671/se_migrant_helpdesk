@@ -328,7 +328,9 @@ class FeedbackNode(AbstractChatNode):
             'chat_id': user_session.chat_id,
             'message_id': user_session.current_message_id,
             'reply_markup': {
-                'inline_keyboard': [[]]
+                'inline_keyboard': [[
+                    {'text': 'Start new session', 'callback_data': '/start'},
+                ]]
             }
         }
 
